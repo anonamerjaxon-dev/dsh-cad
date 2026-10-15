@@ -13,6 +13,7 @@ import type { CadCardProps } from './card.js'
 import { CadCallRow } from './card.js'
 import { makeCadSidePanel } from './sidepanel.js'
 import type { SessionsLike } from './sidepanel.js'
+import { installCadTheme } from './theme.js'
 
 export const inject = ['slots']
 
@@ -57,6 +58,10 @@ const CAD_TOOL_KEYS = [
 ]
 
 export function apply(ctx: ClientContext): void {
+  // Install the CAD theme variables (dark-mode scene/stroke/surface colors)
+  // before any viewport mounts; idempotent across reloads.
+  installCadTheme()
+
   // Entry-crash supervision (the slots' onEntryError seam): render-time
   // failures abdicate an entry silently, so mirror them on the document —
   // the CadErrorBoundary data-cad-err pattern — for diagnosable drift.

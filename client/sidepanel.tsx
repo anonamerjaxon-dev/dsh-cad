@@ -1017,7 +1017,7 @@ const panelStyles: Record<string, React.CSSProperties> = {
     padding: '6px 8px 6px 12px',
     flex: 'none',
     borderBottom: '1px solid var(--dsw-alias-border-l1, #eceff3)',
-    background: 'var(--dsw-alias-bg-subtle, #f7f8fa)',
+    background: 'var(--dsh-cad-surface, #f7f8fa)',
     position: 'relative',
   },
   tabStrip: {
@@ -1248,7 +1248,7 @@ const panelStyles: Record<string, React.CSSProperties> = {
     gap: 8,
     padding: '5px 10px',
     borderBottom: '1px solid var(--dsw-alias-border-l1, #e2e5ea)',
-    background: 'var(--dsw-alias-bg-subtle, #f5f6f8)',
+    background: 'var(--dsh-cad-surface, #f5f6f8)',
   },
   previewLabel: {
     flex: '1 1 auto',

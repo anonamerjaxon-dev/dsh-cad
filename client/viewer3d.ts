@@ -12,6 +12,7 @@ import { ViewCube } from './viewcube.js'
 import { PickingController } from './picking.js'
 import { demoBracketGeometry, DEMO_BOUNDS } from './demo-model.js'
 import type { CadScene3D, CadMesh } from './scene-types.js'
+import { cadThemeColors, subscribeCadTheme } from './theme.js'
 
 /** CAD render modes: shaded faces with feature edges (default), faces only,
  *  or full wireframe. */
@@ -146,7 +147,8 @@ function mountShell(container: HTMLElement, options: { autoRotate?: boolean; onR
 function addSceneFurniture(scene: THREE.Scene, scale: number): THREE.Object3D[] {
   const group = new THREE.Group()
 
-  const grid = new THREE.GridHelper(scale * 2, 20, 0x8a919c, 0x4a4f58)
+  const palette = cadThemeColors()
+  const grid = new THREE.GridHelper(scale * 2, 20, palette.gridMajor, palette.gridMinor)
   // GridHelper defaults to the XZ plane; rotate onto XY for the Z-up world.
   grid.rotation.x = Math.PI / 2
   group.add(grid)
@@ -212,7 +214,7 @@ function ensureMeshEdges(mesh: THREE.Mesh): THREE.LineSegments | undefined {
   material.polygonOffsetUnits = 1
   const edges = new THREE.LineSegments(
     new THREE.EdgesGeometry(geometry, EDGE_ANGLE),
-    new THREE.LineBasicMaterial({ color: 0x33404f, transparent: true, opacity: 0.9 }),
+    new THREE.LineBasicMaterial({ color: cadThemeColors().edge, transparent: true, opacity: 0.9 }),
   )
   mesh.add(edges)
   mesh.userData.edges = edges
@@ -221,13 +223,20 @@ function ensureMeshEdges(mesh: THREE.Mesh): THREE.LineSegments | undefined {
 
 /** Apply a render mode to every mesh under root. */
 function applyRenderMode(root: THREE.Object3D, mode: RenderMode): void {
+  const edgeColor = cadThemeColors().edge
   root.traverse((child) => {
     const mesh = child as THREE.Mesh
     if (!mesh.isMesh) return
     const material = mesh.material as THREE.MeshStandardMaterial
     material.wireframe = mode === 'wireframe'
     const edges = mode === 'shaded-edges' ? ensureMeshEdges(mesh) : (mesh.userData.edges as THREE.LineSegments | undefined)
-    if (edges !== undefined) edges.visible = mode === 'shaded-edges'
+    if (edges !== undefined) {
+      // The canvas is transparent over a themed CSS background, so the feature
+      // edges must follow the palette (dark canvas -> light edges).
+      const lineMaterial = edges.material as THREE.LineBasicMaterial
+      lineMaterial.color.setHex(edgeColor)
+      edges.visible = mode === 'shaded-edges'
+    }
   })
 }
 
@@ -393,8 +402,8 @@ export function mountCadEditor3D(container: HTMLElement, options: { onSource?: (
   }
   placeLights()
 
-  const furniture = addSceneFurniture(scene, maxDim)
-  const grid = furniture[1] as THREE.GridHelper
+  let furniture = addSceneFurniture(scene, maxDim)
+  let grid = furniture[1] as THREE.GridHelper
 
   let mode: RenderMode = 'shaded-edges'
 
@@ -418,6 +427,18 @@ export function mountCadEditor3D(container: HTMLElement, options: { onSource?: (
     placeCamera()
   }
   applyFrame()
+
+  // The transparent canvas follows the CSS scene background for free, but the
+  // GridHelper bakes its colors at construction — rebuild it when the host
+  // palette flips (applyRenderMode then recolors the feature edges too).
+  const unsubscribeTheme = subscribeCadTheme((): void => {
+    disposeObjects(furniture)
+    scene.remove(furniture[0])
+    furniture = addSceneFurniture(scene, maxDim)
+    grid = furniture[1] as THREE.GridHelper
+    grid.position.set(center.x, center.y, bounds.min.z)
+    applyRenderMode(cadRoot, mode)
+  })
 
   // Re-fit while the layout settles (fill-mode containers resize after mount);
   // once the user drives the camera themselves, resizes never re-frame.
@@ -497,6 +518,7 @@ export function mountCadEditor3D(container: HTMLElement, options: { onSource?: (
       cancelAnimationFrame(animationId)
       picking.dispose()
       viewCube.dispose()
+      unsubscribeTheme()
       disposeObjects([cadRoot, ...furniture, hemisphere, key, fill])
       shell.dispose()
     },
@@ -603,6 +625,12 @@ export function mountViewer3D(container: HTMLElement, scene: ViewerScene3D): Liv
     applyRenderMode(cadRoot, mode)
   }
   applyFrame(true)
+
+  // Repaint the scene furniture/edges when the host palette flips; the transparent
+  // canvas itself follows the CSS background without any work.
+  const unsubscribeTheme = subscribeCadTheme((): void => {
+    applyFrame(false)
+  })
 
   // Re-fit while the layout settles; once the user orbits/zooms themselves,
   // resizes never re-frame.
@@ -719,6 +747,7 @@ export function mountViewer3D(container: HTMLElement, scene: ViewerScene3D): Liv
       cancelAnimationFrame(animationId)
       picking.dispose()
       viewCube.dispose()
+      unsubscribeTheme()
       disposeObjects([cad, ...furniture, hemisphere, key, fill])
       shell.dispose()
     },

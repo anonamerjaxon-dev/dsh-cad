@@ -299,7 +299,7 @@ const styles: Record<string, React.CSSProperties> = {
     fontSize: 11,
   },
   rowActive: {
-    background: 'var(--dsw-alias-bg-selected, rgba(77,107,254,0.1))',
+    background: 'var(--dsh-cad-selected-bg, rgba(77,107,254,0.1))',
     boxShadow: 'inset 0 0 0 1px var(--dsw-alias-label-primary, rgba(77,107,254,0.45))',
   },
   rowHidden: {

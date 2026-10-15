@@ -14,6 +14,10 @@
 
 English | [简体中文](./README.zh-CN.md)
 
+> **This is a fork.** [`anonamerjaxon-dev/dsh-cad`](https://github.com/anonamerjaxon-dev/dsh-cad)
+> adds **dark-mode support** to [`LAU-MARS/dsh-cad`](https://github.com/LAU-MARS/dsh-cad)
+> (see [Dark mode](#dark-mode)). The modeling tool family is unchanged.
+
 A CAD plugin for [DeepSeek Harness (dsh)](https://github.com/deepseek-ai/deepseek-harness):
 an **embedded 3D/2D CAD viewer** plus a **native parametric modeling tool family**
 (OCCT kernel) in the Web UI, letting the agent build and inspect CAD geometry
@@ -53,6 +57,7 @@ Cumulative downloads from the npm registry, refreshed daily by CI:
 | 📐 Geometry measurement | Exact volume (mm³), bounding box, triangle counts, DXF layers |
 | 📤 On-demand export | STEP (parametric) / STL (mesh); files are written only when the user asks |
 | 🖥️ Resident CAD panel | A permanent panel right of the conversation: Codex-style tabs (Part / Assembly / Drawing), tracking the latest model in real time while modeling |
+| 🌗 Dark mode | The viewport, panel chrome, 2D strokes and scene grid follow the host light/dark theme automatically (transparent 3D canvas over a themed scene surface; feature edges and grid colors are re-resolved when the theme flips) |
 | ⚡ Zero-copy render pipeline | worker mesh → in-memory binary → three.js typed arrays; zero base64 / zero intermediate files / zero per-step disk writes |
 | 💾 Modeling document persistence | Operation log (JSON) + debounced disk mirror; automatically replayed to restore state after a process restart |
 | 🖼️ Image → profile | PNG sketch/screenshot → Otsu binarization → contour tracing → extrusion-ready polygon (`cad_image_profile`) |
@@ -91,6 +96,22 @@ dsh web
 ```
 
 The patch insert ships as `cordis.patch.yml` in the package root and is applied by the installer via the same `dsh.bundle` manifest.
+
+### Dark mode
+
+The Web GUI ships a light and a dark palette; this fork makes the CAD surfaces
+respect it:
+
+- the 3D viewport is a transparent canvas over a themed scene surface, so it
+  follows the chat background instead of staying white;
+- the 2D stroke, ground grid, feature-edge lines, panel header/rows and
+  selected-row highlight are themed too, and the Three.js colors are re-resolved
+  live when the host's `data-ds-dark-theme` marker flips.
+
+No configuration: the plugin installs its `--dsh-cad-*` variables in a single
+`<style>` element and reads the host palette, so switching Appearance →
+Dark/Light updates the viewport without a reload. Engineering drawings stay on
+white paper by design (the generated SVG bakes a white sheet).
 
 Set `DEEPSEEK_API_KEY` and you are ready — for example:
 

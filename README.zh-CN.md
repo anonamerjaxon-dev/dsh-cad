@@ -10,7 +10,7 @@
 [![occt](https://img.shields.io/badge/occt-7.9.3-4D6BFE)](https://github.com/LAU-MARS/opencascade-ts)
 [![occt.ts](https://img.shields.io/npm/v/occt.ts?label=occt.ts)](https://www.npmjs.com/package/occt.ts)
 [![ansatz](https://img.shields.io/npm/v/ansatz-wasm?label=ansatz)](https://www.npmjs.com/package/ansatz-wasm)
-[![License: MIT](https://img.shields.io/badge/license-MIT-4D6BFE)](./LICENSE)
+[![License: Apache 2.0](https://img.shields.io/badge/license-Apache%202.0-4D6BFE)](./LICENSE)
 
 [English](./README.md) | 简体中文
 
@@ -247,4 +247,7 @@ STL 导出往返（导出 → 一期解析器读回），以及 DCPRT 文档往�
 
 ## License
 
-MIT
+Apache-2.0 —— 详见 [LICENSE](./LICENSE) 与 [NOTICE](./NOTICE)。
+
+上游 `LAU-MARS/dsh-cad` 采用 Apache-2.0 许可。本 fork 沿用该许可、保留上游版权声明，
+并在 [NOTICE](./NOTICE) 中记录本 fork 的改动。

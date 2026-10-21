@@ -10,7 +10,7 @@
 [![occt](https://img.shields.io/badge/occt-7.9.3-4D6BFE)](https://github.com/LAU-MARS/opencascade-ts)
 [![occt.ts](https://img.shields.io/npm/v/occt.ts?label=occt.ts)](https://www.npmjs.com/package/occt.ts)
 [![ansatz](https://img.shields.io/npm/v/ansatz-wasm?label=ansatz)](https://www.npmjs.com/package/ansatz-wasm)
-[![License: MIT](https://img.shields.io/badge/license-MIT-4D6BFE)](./LICENSE)
+[![License: Apache 2.0](https://img.shields.io/badge/license-Apache%202.0-4D6BFE)](./LICENSE)
 
 English | [简体中文](./README.zh-CN.md)
 
@@ -297,4 +297,8 @@ Auto-generated from the commit history — thanks to everyone who has contribute
 
 ## License
 
-MIT
+Apache-2.0 — see [LICENSE](./LICENSE) and [NOTICE](./NOTICE).
+
+Upstream `LAU-MARS/dsh-cad` is licensed Apache-2.0. This fork keeps that
+license, retains the upstream copyright notice, and records its own changes in
+[NOTICE](./NOTICE).

@@ -1,0 +1,33 @@
+dsh-cad
+Copyright 2026 LAU-MARS
+
+This product includes software developed at
+https://github.com/LAU-MARS/dsh-cad (upstream dsh-cad).
+
+This product is licensed under the Apache License, Version 2.0 (see LICENSE).
+
+--------------------------------------------------------------------------
+This fork: https://github.com/anonamerjaxon-dev/dsh-cad
+--------------------------------------------------------------------------
+
+Modifications made in this fork (see the commit history for the full list):
+
+  * Dark-mode support: themed viewport, scene grid/edges and panel surfaces.
+
+The modeling tool family (OCCT kernel, STEP/STL/IGES/DXF import/export) is
+unchanged from upstream.
+
+--------------------------------------------------------------------------
+Third-party components
+--------------------------------------------------------------------------
+
+This product links against (as peer dependencies) and does not include
+source from:
+
+  * DeepSeek Harness (https://github.com/deepseek-ai/deepseek-harness) - MIT
+  * occt.ts / opencascade-ts (https://github.com/LAU-MARS/opencascade-ts)
+  * ansatz-wasm (https://www.npmjs.com/package/ansatz-wasm)
+  * OpenCascade (https://github.com/Open-Cascade-SAS/OCCT) - LGPL-2.1 with
+    exception, used via the WASM build above
+
+See each dependency's own repository for its license terms.
